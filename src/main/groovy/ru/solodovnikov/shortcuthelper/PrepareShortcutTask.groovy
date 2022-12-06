@@ -18,6 +18,8 @@ class PrepareShortcutTask extends DefaultTask {
     @Input
     String applicationId
 
+    @Inject abstract FileSystemOperations getFs() 
+    
     @TaskAction
     void prepare() {
         def shortcuts = new XmlSlurper(false, false).parse(shortcutFile)
@@ -28,7 +30,7 @@ class PrepareShortcutTask extends DefaultTask {
         }
         outputDir.mkdirs()
         def xmlUtil = new XmlUtil()
-        def fw = new FileWriter(project.file("$outputDir/${shortcutFile.name}"))
+        def fw = new FileWriter(fs.file("$outputDir/${shortcutFile.name}"))
         xmlUtil.serialize(shortcuts, fw)
         fw.close()
     }
